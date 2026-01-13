@@ -18,7 +18,7 @@ export function createGameCanvas() {
 
 export function drawDino() {
     const dino = new Image();
-    dino.src = "./Dino-.png";
+    dino.src = "./images/Dino-.png";
 
     dino.onload = function() {
         const x = canvas.width - dino.width - 50;
