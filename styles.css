@@ -1,0 +1,11 @@
+
+
+:root {
+    --background-color: gray;
+}
+title {
+    color:aqua
+}
+.gameCanvas {
+    background-color: gray;
+}

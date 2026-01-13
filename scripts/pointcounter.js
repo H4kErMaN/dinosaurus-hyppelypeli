@@ -1,0 +1,1 @@
+// point counter functions are defined here and used from main.js
