@@ -1,5 +1,5 @@
 // Menu.js should contain menu options for menu, used via main.js
-import { createGameCanvas, drawDino } from "./game.js";
+import { createGameCanvas, drawDino, drawGround, gameLoop } from "./game.js";
 
 
 
@@ -10,7 +10,8 @@ export function createInitialMenu() {
     createTitle(); //test title
     createGameCanvas(); //test canvas 
     drawDino(); //test dino
-
+    drawGround();
+    
 }
 export function createTitle() {
     const header = document.createElement("game-header");
