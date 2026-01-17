@@ -6,26 +6,29 @@ let ctx;
 const groundHeight = 75;
 var groundY;
 
-let groundSpeed = 1;
+let groundSpeed = 3;
 let groundX = 0;
 let maxGroundSpeed = 9;
 
 const rocks = [];
 const maxRocks = 5;
+let rockHeight = 100;
+let rockWidth = 100;
 let rockTimer = 0;
-const rockInterval = 600;
+let rockInterval = 300;
 
 let loopCount = 0;
 
 let dinoImage = null;
 let dinoX = 100;
 let dinoY = 0;
-let dinoWidth = 64;
-let dinoHeight = 64;
+let dinoWidth = 100;
+let dinoHeight = 100;
 let velocityY = 0;
 const gravity = 0.8;
-const jumpStrength = -15;
-let isJumping = false;
+const jumpStrength = -20;
+let onGround = true;
+let jumpInQue = false;
 
 let rockImage = null;
 
@@ -42,7 +45,6 @@ export function gameLoop() {
     updateGroundSpeed();
     updateGround();
     drawGround();
-
     updateRocks();
     drawRocks();
 
@@ -73,27 +75,29 @@ export function createGameCanvas() {
 
 function setupControls() {
     document.addEventListener("keydown", (event) => {
-        if ((event.code === "Space" || event.code === "ArrowUp") && !isJumping) {
-            jump();
+        if ((event.code === "Space" || event.code === "ArrowUp")) {
+            jumpInQue = true; // put jump in que to prevent no jump action
         }
     });
 }
 
 export function jump() {
-    if (!isJumping) {
+    if (onGround && jumpInQue) {
         velocityY = jumpStrength;
-        isJumping = true;
+        onGround = false; // dino is jumping and not on the ground
+        jumpInQue = false; // reset jump que
     }
 }
 
 function updateDino() {
+    jump(); // check jump
     velocityY += gravity;
     dinoY += velocityY;
 
     if (dinoY >= groundY - dinoHeight) {
         dinoY = groundY - dinoHeight;
         velocityY = 0;
-        isJumping = false;
+        onGround = true;
     }
 }
 
@@ -138,9 +142,9 @@ export function createRock() {
 
     const rock = {
         x: canvas.width + Math.random() * 200,
-        y: groundY - 20 - Math.random() * 20,
-        width: 50 + Math.random() * 10,
-        height: 50 + Math.random() * 5
+        y: groundY - 70 - Math.random() * 5,
+        width: rockWidth + Math.random() * 10,
+        height: rockHeight + Math.random() * 4
     }
     rocks.push(rock);
 }
@@ -157,11 +161,20 @@ function updateRocks() {
         rockTimer = 0;
         createRock();
     }
+    console.log(rocks.length);
 }
 function updateGroundSpeed() {
     if (loopCount >= 60 && groundSpeed < maxGroundSpeed) {
         loopCount = 1;
-        groundSpeed += 0.01;
-        console.log(groundSpeed);
-    }; 
+        groundSpeed += 0.02;
+        //console.log(groundSpeed);
+    };
+    if (groundSpeed >= maxGroundSpeed && rockInterval >= 100) {
+        rockInterval -= 0.5;
+        console.log(rockInterval);
+    }
+    if (rockInterval <= 100) {
+        rockInterval = Math.floor(Math.random() * (200 - 35 + 1));
+        //console.log(rockInterval);
+    }
 }
