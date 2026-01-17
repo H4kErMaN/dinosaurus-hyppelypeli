@@ -3,7 +3,7 @@
 let canvas;
 let ctx;
 
-const groundHeight = 75;
+const groundHeight = 100;
 var groundY;
 
 let groundSpeed = 3;
@@ -22,8 +22,8 @@ let loopCount = 0;
 let dinoImage = null;
 let dinoX = 100;
 let dinoY = 0;
-let dinoWidth = 100;
-let dinoHeight = 100;
+let dinoWidth = 120;
+let dinoHeight = 120;
 let velocityY = 0;
 const gravity = 0.8;
 const jumpStrength = -20;
@@ -55,6 +55,7 @@ export function gameLoop() {
 }
 
 export function createGameCanvas() {
+    const main = document.getElementById("main-content");
     canvas = document.createElement("canvas");
     canvas.id = "gameCanvas";
     canvas.width = 800;
@@ -62,7 +63,7 @@ export function createGameCanvas() {
     setCanvasSizeToFullScreen();
     canvas.classList.add("gameCanvas");
 
-    document.body.appendChild(canvas);
+    main.appendChild(canvas);
     ctx = canvas.getContext("2d");
     groundY = canvas.height - groundHeight;
 
@@ -72,6 +73,10 @@ export function createGameCanvas() {
 
     return { canvas, ctx };
 }
+function setCanvasSizeToFullScreen() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight - 130 ;
+}   
 
 function setupControls() {
     document.addEventListener("keydown", (event) => {
@@ -107,10 +112,6 @@ export function drawDino() {
     }
 }
 
-function setCanvasSizeToFullScreen() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight -200;
-}   
 
 export function drawGround() {
     ctx.fillStyle = '#777777';

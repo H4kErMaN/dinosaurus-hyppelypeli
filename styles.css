@@ -1,11 +1,30 @@
 
 
 :root {
-    --background-color: gray;
+    --background-color: rgba(125, 125, 125, 0.264);
 }
 title {
     color:aqua
 }
 .gameCanvas {
-    background-color: gray;
+    background-color: rgb(112, 160, 255);
+}
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+main {
+  flex: 1; 
+}
+
+.hidden {
+    display: none !important;
 }
