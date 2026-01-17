@@ -15,7 +15,7 @@ const maxRocks = 5;
 let rockHeight = 100;
 let rockWidth = 100;
 let rockTimer = 0;
-let rockInterval = 300;
+let rockInterval = 270;
 
 let loopCount = 0;
 
@@ -162,20 +162,20 @@ function updateRocks() {
         rockTimer = 0;
         createRock();
     }
-    console.log(rocks.length);
 }
 function updateGroundSpeed() {
     if (loopCount >= 60 && groundSpeed < maxGroundSpeed) {
         loopCount = 1;
         groundSpeed += 0.02;
-        //console.log(groundSpeed);
     };
     if (groundSpeed >= maxGroundSpeed && rockInterval >= 100) {
         rockInterval -= 0.5;
-        console.log(rockInterval);
     }
+    if (groundSpeed < maxGroundSpeed){
+        rockInterval = Math.floor(Math.random()* 50 +(200));
+    }   
     if (rockInterval <= 100) {
         rockInterval = Math.floor(Math.random() * (200 - 35 + 1));
-        //console.log(rockInterval);
+
     }
 }

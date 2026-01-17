@@ -33,7 +33,8 @@ export function createTitle() {
 function createMenuItems() {
     const menuDiv = document.createElement("div");
     menuDiv.id = "menu-items";
-    menuDiv.classList.add("d-flex", "flex-column", "justify-content-center", "align-items-center", "vh-100");
+    menuDiv.classList.add("d-flex", "flex-column", "justify-content-center",
+        "align-items-center", "vh-100");
 
     const main = document.createElement("main");
     main.id = "main-content";
@@ -44,7 +45,8 @@ function createMenuItems() {
     startButton.classList.add("btn", "btn-primary", "btn-lg", "mb-3");
     startButton.id = "startButton";
     menuDiv.appendChild(startButton);
-    main.classList.add("flex-fill", "d-flex", "justify-content-center", "align-items-center", "flex-column");
+    main.classList.add("flex-fill", "d-flex", "justify-content-center", 
+        "align-items-center", "flex-column");
     main.appendChild(menuDiv);
     addFooter();
 
