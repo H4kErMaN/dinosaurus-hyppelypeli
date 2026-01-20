@@ -1,4 +1,5 @@
 // Game functions are build here and used from main.js
+import { initScoreDisplay, updateScore } from "./pointcounter.js";
 
 let canvas;
 let ctx;
@@ -63,6 +64,7 @@ export function gameLoop() {
 
     updateDino();
     drawDino();
+    updateScore();
     loopCount += 1;
     requestAnimationFrame(gameLoop);
 }
@@ -83,6 +85,7 @@ export function createGameCanvas() {
     dinoY = groundY - dinoHeight;
 
     setupControls();
+    initScoreDisplay(canvas);
 
     return { canvas, ctx };
 }
