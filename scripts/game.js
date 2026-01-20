@@ -17,6 +17,13 @@ let rockWidth = 100;
 let rockTimer = 0;
 let rockInterval = 270;
 
+const birds = [];
+const maxBirds = 3;
+let birdWidth = 80;
+let birdHeight = 60;
+let birdTimer = 0;
+let birdInterval = 400;
+
 let loopCount = 0;
 
 let dinoImage = null;
@@ -31,6 +38,7 @@ let onGround = true;
 let jumpInQue = false;
 
 let rockImage = null;
+let birdImage = null;
 
 export function preloadImages() {
     dinoImage = new Image();
@@ -38,6 +46,9 @@ export function preloadImages() {
 
     rockImage = new Image();
     rockImage.src = "./images/kivi.png";
+
+    birdImage = new Image();
+    birdImage.src = "./images/lintuu.png";
 }
 
 export function gameLoop() {
@@ -47,6 +58,8 @@ export function gameLoop() {
     drawGround();
     updateRocks();
     drawRocks();
+    updateBirds();
+    drawBirds();
 
     updateDino();
     drawDino();
@@ -178,4 +191,42 @@ function updateGroundSpeed() {
         rockInterval = Math.floor(Math.random() * (200 - 35 + 1));
 
     }
+}
+
+function createBird() {
+    if (birds.length >= maxBirds) return;
+
+    const bird = {
+        x: canvas.width + Math.random() * 200,
+        y: groundY - 150 - Math.random() * 80,
+        width: birdWidth,
+        height: birdHeight
+    };
+    birds.push(bird);
+}
+
+function updateBirds() {
+    var birdSpeed = groundSpeed + 1;
+    birds.forEach(bird => bird.x -= birdSpeed);
+
+    for (let i = birds.length - 1; i >= 0; i--) {
+        if (birds[i].x + birds[i].width < 0) birds.splice(i, 1);
+    }
+
+    birdTimer += 1;
+    if (birdTimer > birdInterval + Math.floor(Math.random() * 100)) {
+        birdTimer = 0;
+        createBird();
+    }
+}
+
+function drawBirds() {
+    birds.forEach(bird => {
+        if (birdImage && birdImage.complete) {
+            ctx.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
+        } else {
+            ctx.fillStyle = "#8B4513";
+            ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+        }
+    });
 }
