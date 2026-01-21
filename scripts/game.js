@@ -57,6 +57,7 @@ export function gameLoop() {
     updateGroundSpeed();
     updateGround();
     drawGround();
+    checkCollisionWithRocks();
     updateRocks();
     drawRocks();
     updateBirds();
@@ -98,6 +99,43 @@ function setupControls() {
     document.addEventListener("keydown", (event) => {
         if ((event.code === "Space" || event.code === "ArrowUp")) {
             jumpInQue = true; // put jump in que to prevent no jump action
+        }
+    });
+}
+function checkCollisionWithRocks() {
+    const dinoPad = {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0  
+    };
+
+    const rockPad = {
+        left: 50,
+        right: 55,
+        top: 0,
+        bottom: 0
+    };
+
+    const dinoLeft   = dinoX + dinoPad.left;
+    const dinoRight  = dinoX + dinoWidth - dinoPad.right;
+    const dinoTop    = dinoY + dinoPad.top;
+    const dinoBottom = dinoY + dinoHeight - dinoPad.bottom;
+
+    rocks.forEach(rock => {
+        const rockLeft   = rock.x + rockPad.left;
+        const rockRight  = rock.x + rock.width - rockPad.right;
+        const rockTop    = rock.y + rockPad.top;
+        const rockBottom = rock.y + rock.height - rockPad.bottom;
+
+        if (
+            rockLeft < dinoRight &&
+            rockRight > dinoLeft &&
+            rockTop < dinoBottom &&
+            rockBottom > dinoTop
+        ) {
+            console.log("hit");
+            groundSpeed = 0;
         }
     });
 }
