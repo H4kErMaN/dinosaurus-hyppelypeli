@@ -1,5 +1,7 @@
 // Game functions are build here and used from main.js
-import { initScoreDisplay, updateScore } from "./pointcounter.js";
+import { initScoreDisplay, updateScore, getScore, resetScore } from "./pointcounter.js";
+
+let gameOver = false;
 
 let canvas;
 let ctx;
@@ -54,10 +56,21 @@ export function preloadImages() {
 
 export function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (gameOver) {
+        drawGround();
+        drawRocks();
+        drawBirds();
+        drawDino();
+        showGameOver();
+        return;
+    }
+
     updateGroundSpeed();
     updateGround();
     drawGround();
     checkCollisionWithRocks();
+    checkCollisionWithBirds();
     updateRocks();
     drawRocks();
     updateBirds();
@@ -98,9 +111,36 @@ function setCanvasSizeToFullScreen() {
 function setupControls() {
     document.addEventListener("keydown", (event) => {
         if ((event.code === "Space" || event.code === "ArrowUp")) {
-            jumpInQue = true; // put jump in que to prevent no jump action
+            if (gameOver) {
+                restartGame();
+            } else {
+                jumpInQue = true;
+            }
         }
     });
+}
+
+function restartGame() {
+    gameOver = false;
+    groundSpeed = 3;
+    groundX = 0;
+    loopCount = 0;
+    rockTimer = 0;
+    rockInterval = 270;
+    birdTimer = 0;
+    birdInterval = 400;
+
+    rocks.length = 0;
+    birds.length = 0;
+
+    dinoY = groundY - dinoHeight;
+    velocityY = 0;
+    onGround = true;
+    jumpInQue = false;
+
+    resetScore();
+
+    gameLoop();
 }
 function checkCollisionWithRocks() {
     const dinoPad = {
@@ -134,7 +174,47 @@ function checkCollisionWithRocks() {
             rockTop < dinoBottom &&
             rockBottom > dinoTop
         ) {
-            console.log("hit");
+            console.log("hit rock");
+            gameOver = true;
+            groundSpeed = 0;
+        }
+    });
+}
+
+function checkCollisionWithBirds() {
+    const dinoPad = {
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: 20
+    };
+
+    const birdPad = {
+        left: 15,
+        right: 15,
+        top: 15,
+        bottom: 15
+    };
+
+    const dinoLeft   = dinoX + dinoPad.left;
+    const dinoRight  = dinoX + dinoWidth - dinoPad.right;
+    const dinoTop    = dinoY + dinoPad.top;
+    const dinoBottom = dinoY + dinoHeight - dinoPad.bottom;
+
+    birds.forEach(bird => {
+        const birdLeft   = bird.x + birdPad.left;
+        const birdRight  = bird.x + bird.width - birdPad.right;
+        const birdTop    = bird.y + birdPad.top;
+        const birdBottom = bird.y + bird.height - birdPad.bottom;
+
+        if (
+            birdLeft < dinoRight &&
+            birdRight > dinoLeft &&
+            birdTop < dinoBottom &&
+            birdBottom > dinoTop
+        ) {
+            console.log("hit bird");
+            gameOver = true;
             groundSpeed = 0;
         }
     });
@@ -143,13 +223,13 @@ function checkCollisionWithRocks() {
 export function jump() {
     if (onGround && jumpInQue) {
         velocityY = jumpStrength;
-        onGround = false; // dino is jumping and not on the ground
-        jumpInQue = false; // reset jump que
+        onGround = false;
+        jumpInQue = false;
     }
 }
 
 function updateDino() {
-    jump(); // check jump
+    jump();
     velocityY += gravity;
     dinoY += velocityY;
 
@@ -174,7 +254,7 @@ export function drawGround() {
 }
 
 function updateGround() {
-    groundX -= groundSpeed; // move ground
+    groundX -= groundSpeed;
     if (groundX <= -canvas.width) {
         groundX = 0;
     }
@@ -185,7 +265,6 @@ function drawRocks() {
         if (rockImage && rockImage.complete) {
             ctx.drawImage(rockImage, rock.x, rock.y, rock.width, rock.height);
         } else {
-            // Fallback to rectangle if image not loaded
             ctx.fillStyle = "#333";
             ctx.fillRect(rock.x, rock.y, rock.width, rock.height);
         }
@@ -270,4 +349,22 @@ function drawBirds() {
             ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
         }
     });
+}
+
+function showGameOver() {
+    const finalScore = getScore();
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 48px 'Courier New', monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 50);
+
+    ctx.font = "bold 32px 'Courier New', monospace";
+    ctx.fillText("Pisteet: " + finalScore, canvas.width / 2, canvas.height / 2 + 20);
+
+    ctx.font = "20px 'Courier New', monospace";
+    ctx.fillText("Paina SPACE aloittaaksesi uudelleen", canvas.width / 2, canvas.height / 2 + 80);
 }
