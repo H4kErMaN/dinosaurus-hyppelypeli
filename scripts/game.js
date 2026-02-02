@@ -151,9 +151,9 @@ function checkCollisionWithRocks() {
     };
 
     const rockPad = {
-        left: 50,
-        right: 55,
-        top: 0,
+        left: 60,
+        right: 70,
+        top: 10,
         bottom: 0
     };
 
